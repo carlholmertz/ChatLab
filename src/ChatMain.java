@@ -33,8 +33,9 @@ public class ChatMain{
 		String nickName = in.nextLine();
 		System.out.println(nickName);
 
-		PDUJoin.createPdu(nickName);
-
+		byte [] joinPdu = PDUJoin.createPdu(nickName);
+		
+		client.getOutputStream().write(joinPdu);
 		
 		
 	}
@@ -45,24 +46,25 @@ public class ChatMain{
 		int modulus = pdu.length() % 4;
 		System.out.println("modulus: "+ modulus);
 		System.out.println("pdu.length: "+ pdu.length());
-		int newLength = (pdu.length()+modulus);
-		System.out.println("new length: "+newLength);
-		pdu.extendTo(newLength);
-		System.out.println(pdu.length());
-		pdu.setByte(10,(byte) 0);
+		if (modulus !=0){
+			int newLength = (pdu.length()+(4-modulus));
+			System.out.println("new length: "+newLength);
+			pdu.extendTo(newLength);
+			
+			int step = (4-modulus);
+			int offset;
+			for(int i= 0; i != step; i++){
+				offset = (pdu.length() -(step-i));
+						
+				System.out.println(i+" plats: "+offset);
+				pdu.setByte(offset,(byte) 0);
+				
+			}
+		}
 		
-//		byte[] nameByte = pdu.getSubrange(, nameLength);
-//		y += 4;
-//		String name = new String(nameByte,"UTF-8");
-//		int offset;
-//		for(int i= 0; i != modulus; i++){
-//			offset = (pdu.length() -(modulus-i)+1);
-//					
-//			System.out.println(i+" längd: "+offset);
-//			pdu.setByte(offset,(byte) 0);
-//			
-//		}
-		System.out.println("Längden mother f:er: "+pdu.length());
+		
+		
+		
 		
 	}
 
