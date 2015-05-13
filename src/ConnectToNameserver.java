@@ -9,8 +9,9 @@ import java.util.Scanner;
 
 
 public class ConnectToNameserver {
+	  public static String servers[][];
 
-	public static void connectToNs() throws UnknownHostException, SocketException, UnsupportedEncodingException {
+	public static String[][] connectToNs() throws UnknownHostException, SocketException, UnsupportedEncodingException {
 		
 		String host;
 		int port;
@@ -33,6 +34,7 @@ public class ConnectToNameserver {
 		
 		client.close();
 		
+		return servers;
 			
 		
 	}
@@ -75,11 +77,14 @@ public class ConnectToNameserver {
 	}
 	private static void pduReader(byte[] receivedData) throws UnknownHostException, UnsupportedEncodingException{
 		
+		
+		
 		/*Skapar en ny PDU för att kunna läsa av paketet från namnservern*/
 		PDU availableServers = new PDU(receivedData, receivedData.length);
 		int op = availableServers.getByte(0);
 		int sekvens = availableServers.getByte(1);
 		int amountOfServers = availableServers.getShort(2);
+		servers = new String[amountOfServers][2];
 		
 		/*Skriver ut headern som pdun från namnservern inehåller.*/
 		System.out.println("Op: "+op);
@@ -119,7 +124,13 @@ public class ConnectToNameserver {
 			System.out.println("Namn längd: "+nameLength);
 			System.out.println("Namn: "+name);
 			System.out.println("------------------------------");
+
+			
+			servers[i][0] = hostName;
+			servers[i][1] = Integer.toString(portNumber);
+			
 		}
+		
 			
 	}
 }
