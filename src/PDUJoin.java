@@ -15,7 +15,7 @@ public class PDUJoin {
 		
 		/*Add the nickname to the pdu*/
 		byte[] nickNameInt = nickName.getBytes("UTF-8");
-		System.out.println("Nick length: "+nickNameInt.length);
+//		System.out.println("Nick length: "+nickNameInt.length);
 		pdu.setSubrange(4, nickNameInt);
 		
 		/*Check if it's divisible by four*/
@@ -23,7 +23,7 @@ public class PDUJoin {
 		 
 		/*Getting the resulting byte array*/
 		byte[] joinArray= pdu.getBytes();
-		System.out.println("joinarr: "+joinArray.length);
+//		System.out.println("joinarr: "+joinArray.length);
 		
 		return joinArray;
 		

@@ -6,8 +6,12 @@ import java.util.Scanner;
 
 
 public class ChatMain{
-
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	static DataOutputStream sOutput;
+	static DataInputStream sInput;
+	static Socket client;
+	
+	
+	public static void main(String[] args) throws NumberFormatException, IOException{
 		String availableServers[][] = ConnectToNameserver.connectToNs();
 		System.out.println(availableServers.length);
 		
@@ -24,19 +28,79 @@ public class ChatMain{
 		}
 		
 		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
-		System.out.println(port);
-		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
-		Socket client = new Socket(address, port);
 		
+		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
+	
+		
+		
+		try {
+			
+			client = new Socket(address, port);
+			
+			
+			
+			sInput = new DataInputStream( client.getInputStream() );
+			sOutput = new DataOutputStream( client.getOutputStream() );
+			System.out.println("\nVi är anslutna!");
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Vi är inte anslutna!");
+			e.printStackTrace();
+		}
 		
 		System.out.println("Skriv användarnamn:");
 		String nickName = in.nextLine();
-		System.out.println(nickName);
+		
 
 		byte [] joinPdu = PDUJoin.createPdu(nickName);
 		
-		client.getOutputStream().write(joinPdu);
+		try {
+			sOutput.write(joinPdu);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int op;
+		while(true){
+			
 		
+			op = sInput.read();
+			
+			
+			switch (op) {
+            	case OpCodes.NICKS:
+            		
+            		PDUNicks.read(sInput);
+            		
+
+                    break;
+            	case OpCodes.MESSAGE:
+            			System.out.println("Recieved message: ");
+            			PDUMessage.read(sInput);
+            			
+            		break;
+            	default:
+            		System.out.println(op+" Felaktig OP-kod");
+            		System.out.println(sInput.available());
+            		
+            		break;
+			}
+//		
+			
+			
+			
+			
+			
+		}
+		
+
+		
+		
+
+		
+
 		
 	}
 	
@@ -44,11 +108,11 @@ public class ChatMain{
 		
 		
 		int modulus = pdu.length() % 4;
-		System.out.println("modulus: "+ modulus);
-		System.out.println("pdu.length: "+ pdu.length());
+		
+		
 		if (modulus !=0){
 			int newLength = (pdu.length()+(4-modulus));
-			System.out.println("new length: "+newLength);
+			
 			pdu.extendTo(newLength);
 			
 			int step = (4-modulus);
@@ -56,16 +120,20 @@ public class ChatMain{
 			for(int i= 0; i != step; i++){
 				offset = (pdu.length() -(step-i));
 						
-				System.out.println(i+" plats: "+offset);
+				
 				pdu.setByte(offset,(byte) 0);
 				
 			}
 		}
-		
-		
-		
-		
-		
 	}
-
 }
+
+
+
+	
+		
+		
+		
+		
+		
+
