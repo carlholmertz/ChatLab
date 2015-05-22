@@ -39,6 +39,8 @@ public class ConnectToNameserver {
 		
 	}
 	private static DatagramSocket sendPacket(int port, String host) throws UnknownHostException, SocketException{
+		/*Skickar GetList kommandot till namnservern för att få reda på 
+		 * servrar som är tillgängliga.*/
 		
 		InetAddress address = InetAddress.getByName(host);
 		DatagramSocket client = new DatagramSocket();
@@ -81,15 +83,12 @@ public class ConnectToNameserver {
 		
 		/*Skapar en ny PDU för att kunna läsa av paketet från namnservern*/
 		PDU availableServers = new PDU(receivedData, receivedData.length);
-		int op = availableServers.getByte(0);
-		int sekvens = availableServers.getByte(1);
 		int amountOfServers = availableServers.getShort(2);
 		servers = new String[amountOfServers][2];
 		
 		/*Skriver ut headern som pdun från namnservern inehåller.*/
-		System.out.println("Op: "+op);
-		System.out.println("Sekvens nummer "+sekvens);
-		System.out.println("Antal servers "+amountOfServers);
+
+		System.out.println("Antal servers tillgängliga "+amountOfServers);
 		
 		/*Loopar igenom alla tillgängliga servrar och skriver ut dessa för att användaren 
 		 * ska kunna välja en av dessa*/

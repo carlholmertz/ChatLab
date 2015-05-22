@@ -12,15 +12,16 @@ public class ChatMain{
 	
 	
 	public static void main(String[] args) throws NumberFormatException, IOException{
+		/*Börjar med att ansluta till namnservern för att ta reda på tillgängliga servers*/
 		String availableServers[][] = ConnectToNameserver.connectToNs();
-		System.out.println(availableServers.length);
 		
-		/*Val av server*/
+		/*Här får användaren välja en server av server*/
 		String choice;
 		Scanner in = new Scanner(System.in);
 		System.out.println("Välj servernummer:");
 		choice = in.nextLine();
 		
+		/*---Om val av server inte är giltigt---*/
 		while(Integer.parseInt(choice) <= 0 || Integer.parseInt(choice) > availableServers.length){
 			System.out.println(choice+" är inte en giltlig server, ange nytt servernummer:");
 			choice = in.nextLine();
@@ -28,82 +29,101 @@ public class ChatMain{
 		}
 		
 		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
-		
 		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
 	
 		
 		
 		try {
-			
+			/*---Öppnar en socket för anslutning till servern---*/
 			client = new Socket(address, port);
-			
-			
-			
 			sInput = new DataInputStream( client.getInputStream() );
 			sOutput = new DataOutputStream( client.getOutputStream() );
-			System.out.println("\nVi är anslutna!");
+			
+			/*---------------------------------------------------*/
 			
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Vi är inte anslutna!");
+			System.out.println("Vi är inte anslutna! Något gick fel.");
 			e.printStackTrace();
 		}
-		
+		/*---Användaren får ange önskat användarnamn---*/
 		System.out.println("Skriv användarnamn:");
 		String nickName = in.nextLine();
 		
-
+		/*-----Försöker ansluta till chatten med joinPDUn-----*/
 		byte [] joinPdu = PDUJoin.createPdu(nickName);
-		
 		try {
 			sOutput.write(joinPdu);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int op;
-		while(true){
-			
+		/*----------------------------------------------------*/
 		
-			op = sInput.read();
+		/*----Startar tråd som lyssnar efter input från tangentbordet----*/
+		 Thread thread = new Thread(new ClientSender());
+		 thread.start();
+		
+		
+		/*----En loop som ligger och lyssnar efter meddelanden och kallar på funktioner
+		 * beroende på OPnummer----*/
+		byte op;
+		boolean loop = true;
+		while(loop == true){
+		
+			op = sInput.readByte();
 			
 			
 			switch (op) {
             	case OpCodes.NICKS:
             		
-            		PDUNicks.read(sInput);
+            		PDUNicks.read(op);
             		
 
                     break;
             	case OpCodes.MESSAGE:
-            			System.out.println("Recieved message: ");
-            			PDUMessage.read(sInput);
+            			System.out.println("\nRecieved message: ");
+            			PDUMessage.read(op);
             			
             		break;
+            	case OpCodes.UJOIN:
+        			System.out.println("\nNy klient har anslutit: ");
+        			PDUJoin.readUJOIN(op);
+        			
+        			
+        		break;
+            	case OpCodes.ULEAVE:
+        			System.out.println("\nKlient har lämnat chatten: ");
+        			PDUJoin.readULEAVE(op);
+        			
+        			
+        		break;
+            	case OpCodes.UCNICK:
+        			System.out.println("\nKlient har lämnat chatten: ");
+        			PDUNicks.readUCNICK(op);
+        			
+        		break;
+            	case OpCodes.QUIT:
+        			System.out.println("\nChatten avslutas. ");
+        			
+        			client.shutdownOutput();
+        			client.shutdownInput();
+        			client.close();
+        			loop = false;
+        			
+        		break;
             	default:
             		System.out.println(op+" Felaktig OP-kod");
             		System.out.println(sInput.available());
             		
             		break;
-			}
-//		
-			
-			
-			
-			
-			
+			}		
 		}
-		
-
-		
-		
-
-		
-
-		
 	}
 	
+	/*En funktion som fyller PDUerna med nollor för att de ska vara jämnt delbara
+	 * med fyra.*/
 	public static void devideByFour(PDU pdu){
 		
 		
