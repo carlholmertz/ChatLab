@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 
 public class ConnectToNameserver {
-	  public static String servers[][];
+	public static String servers[][];
 
 	public static String[][] connectToNs() throws UnknownHostException, SocketException, UnsupportedEncodingException {
 		
@@ -18,7 +18,7 @@ public class ConnectToNameserver {
 		
 		/*Ber om adress och port från användaren*/
 	    Scanner in = new Scanner(System.in);
-		System.out.println("Skiriv namnserverns namn:");
+		System.out.println("Skriv namnserverns namn:");
 		host = in.nextLine();
 	    
 	    System.out.println("Skiriv portnummer:");

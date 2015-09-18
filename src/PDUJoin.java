@@ -27,7 +27,7 @@ public class PDUJoin {
 		 
 		/*Getting the resulting byte array*/
 		byte[] joinArray= pdu.getBytes();
-//		System.out.println("joinarr: "+joinArray.length);
+
 		
 		return joinArray;
 		
