@@ -52,7 +52,9 @@ public class ClientSender implements Runnable{
 				try {
 					/*---Skickar QUIT-meddelandet och avslutar loopen---*/
 					ChatMain.sOutput.write(quit);
-					break;
+					
+					//Avslutar programmet.
+					System.exit(0);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -11,9 +11,11 @@ public class ChatMain{
 	static Socket client;
 	
 	
+	
 	public static void main(String[] args) throws NumberFormatException, IOException{
 		/*Börjar med att ansluta till namnservern för att ta reda på tillgängliga servers*/
 		String availableServers[][] = ConnectToNameserver.connectToNs();
+		
 		
 		/*Här får användaren välja en server av server*/
 		String choice;
@@ -28,9 +30,10 @@ public class ChatMain{
 			
 		}
 		
-		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
-		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
-	
+//		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
+//		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
+		int port = 65450;
+		InetAddress address = InetAddress.getByName("while.cs.umu.se");
 		
 		
 		try {
@@ -71,9 +74,9 @@ public class ChatMain{
 		byte op;
 		boolean loop = true;
 		while(loop == true){
-		
-			op = sInput.readByte();
 			
+			op = sInput.readByte();
+		
 			
 			switch (op) {
             	case OpCodes.NICKS:
@@ -100,19 +103,19 @@ public class ChatMain{
         			
         		break;
             	case OpCodes.UCNICK:
-        			System.out.println("\nKlient har lämnat chatten: ");
+        			System.out.println("\nKlient har bytt användarnamn: ");
         			PDUNicks.readUCNICK(op);
         			
         		break;
-            	case OpCodes.QUIT:
-        			System.out.println("\nChatten avslutas. ");
-        			
-        			client.shutdownOutput();
-        			client.shutdownInput();
-        			client.close();
-        			loop = false;
-        			
-        		break;
+//            	case OpCodes.QUIT:
+//        			System.out.println("\nChatten avslutas. ");
+//        			
+//        			client.shutdownOutput();
+//        			client.shutdownInput();
+//        			client.close();
+//        			loop = false;
+//        			
+//        		break;
             	default:
             		System.out.println(op+" Felaktig OP-kod");
             		System.out.println(sInput.available());

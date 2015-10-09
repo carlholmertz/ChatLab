@@ -21,7 +21,7 @@ public class ConnectToNameserver {
 		System.out.println("Skriv namnserverns namn:");
 		host = in.nextLine();
 	    
-	    System.out.println("Skiriv portnummer:");
+	    System.out.println("Skriv portnummer:");
 		port = in.nextInt();
 	
 		System.out.println("Du skrev in namservern "+host+" på port:"+port);
@@ -83,6 +83,8 @@ public class ConnectToNameserver {
 		
 		/*Skapar en ny PDU för att kunna läsa av paketet från namnservern*/
 		PDU availableServers = new PDU(receivedData, receivedData.length);
+		int sekvNumemr = availableServers.getByte(1);
+		System.out.println("Sekvens Nr: "+sekvNumemr);
 		int amountOfServers = availableServers.getShort(2);
 		servers = new String[amountOfServers][2];
 		
@@ -95,38 +97,57 @@ public class ConnectToNameserver {
 		int y = 4;
 		for(int i = 0; i != amountOfServers; i++){
 			
-			System.out.println("\n"+"Server nr: "+ (i+1));
-			System.out.println("------------------------------");
 			
+			System.out.println("y: "+y);
 			/*Ip-adressen, castar om long till String, sedan tar vi reda på host namnet
 			 * utifrån ip-adressen*/
 			long addressLong = availableServers.getInt(y);
 			String address = Long.toString(addressLong);
+			
 			InetAddress ipAddress = InetAddress.getByName(address);
 			String hostName = ipAddress.getHostName();
+			
 		    
 			y += 4;
 			int portNumber = availableServers.getShort(y);
+			
 			y += 2;
 			int amountClients = availableServers.getByte(y);
+			
 			y += 1;
 			int nameLength = availableServers.getByte(y);
-			y +=1;
-			/*Servernamn hämtas som en byte array för att kunna skrivas till en sträng*/
-			byte[] nameByte = availableServers.getSubrange(y, nameLength);
-			y += 4;
-			String name = new String(nameByte,"UTF-8");
-			
-			System.out.println("Adress: "+hostName);
-			System.out.println("Port: "+portNumber);
-			System.out.println("Klienter: "+amountClients);
-			System.out.println("Namn längd: "+nameLength);
-			System.out.println("Namn: "+name);
-			System.out.println("------------------------------");
+			if (nameLength <=  255){
+				
+				y +=1;
+				
+				/*Servernamn hämtas som en byte array för att kunna skrivas till en sträng*/
 
+				System.out.println("\n"+"Längd: "+ availableServers.length());
+				
+	
+				System.out.println("\n"+"Server nr: "+ (i+1));
+				System.out.println("------------------------------");
+				System.out.println("Adress: "+hostName);
+				System.out.println("Port: "+portNumber);
+				System.out.println("Klienter: "+amountClients);
+				System.out.println("Namnlängd: "+nameLength);
+				
+//				byte[] nameByte = availableServers.getSubrange(y, nameLength);
+//				String name = new String(nameByte,"UTF-8");
+				String name = "bajs";
+				
+				System.out.println("Namn: "+name);
+				System.out.println("------------------------------");
+	
+				
+				servers[i][0] = hostName;
+				servers[i][1] = Integer.toString(portNumber);
+				
+				y += 4;
 			
-			servers[i][0] = hostName;
-			servers[i][1] = Integer.toString(portNumber);
+			}else{
+				System.out.println("too long name");
+			}
 			
 		}
 		
