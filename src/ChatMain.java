@@ -30,10 +30,10 @@ public class ChatMain{
 			
 		}
 		
-//		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
-//		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
-		int port = 65450;
-		InetAddress address = InetAddress.getByName("while.cs.umu.se");
+		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
+		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
+//		int port = 65450;
+//		InetAddress address = InetAddress.getByName("while.cs.umu.se");
 		
 		
 		try {
