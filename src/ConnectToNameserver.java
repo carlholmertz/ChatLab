@@ -59,7 +59,7 @@ public class ConnectToNameserver {
 		return client;
 	}
 	private static byte[] receivePacket(DatagramSocket client){
-		byte[] receivedData = new byte[100];
+		byte[] receivedData = new byte[65507];
 		
 
 		
@@ -132,9 +132,9 @@ public class ConnectToNameserver {
 				System.out.println("Klienter: "+amountClients);
 				System.out.println("NamnlŠngd: "+nameLength);
 				
-//				byte[] nameByte = availableServers.getSubrange(y, nameLength);
-//				String name = new String(nameByte,"UTF-8");
-				String name = "bajs";
+				byte[] nameByte = availableServers.getSubrange(y, nameLength);
+				String name = new String(nameByte,"UTF-8");
+//				String name = "bajs";
 				
 				System.out.println("Namn: "+name);
 				System.out.println("------------------------------");
@@ -143,7 +143,16 @@ public class ConnectToNameserver {
 				servers[i][0] = hostName;
 				servers[i][1] = Integer.toString(portNumber);
 				
-				y += 4;
+				if(nameLength > 4){
+					
+					y += (nameLength + (4-(nameLength%4)));
+				
+				
+					
+				}
+				else{
+					y += 4;
+				}
 			
 			}else{
 				System.out.println("too long name");
