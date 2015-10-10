@@ -147,8 +147,6 @@ public class ConnectToNameserver {
 					
 					y += (nameLength + (4-(nameLength%4)));
 				
-				
-					
 				}
 				else{
 					y += 4;

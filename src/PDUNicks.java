@@ -57,7 +57,8 @@ public class PDUNicks {
 		String oldName = new String(oldNickName,"UTF-8");
 		
 		byte[] newNickName = new byte[newNickLength];
-		newNickName = pdu.getSubrange(8+oldNickLength,newNickLength);
+		
+		newNickName = pdu.getSubrange(8+oldNickLength,(newNickLength+(4-newNickLength%4)));
 		String newName = new String(newNickName,"UTF-8");
 		
 		System.out.println(timeString.toString());
@@ -65,6 +66,7 @@ public class PDUNicks {
 		
 	}
 	public static void changeNICK(String newNick) throws UnsupportedEncodingException{
+		
 		int length = newNick.length();
 		
 		/*----Skapar en pdu och fyller den med information----*/
@@ -75,8 +77,9 @@ public class PDUNicks {
 		pdu.setByte(3,(byte)0);//Pad
 		
 		byte[] nickName = newNick.getBytes("UTF-8");
-		
+		System.out.println("hej1");
 		pdu.setSubrange(4,nickName);
+		System.out.println("hej");
 		/*---Kontrollerar att PDUn Šr delbar med 4---*/
 		ChatMain.devideByFour(pdu);
 		
