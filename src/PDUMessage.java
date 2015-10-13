@@ -87,17 +87,13 @@ public class PDUMessage {
 			if(nickLength != 0){
 				byte[] nickname = new byte[nickLength];
 				
-				if(messageLength %4 == 0){
+				if(messageLength%4 != 0){
+					nickname = pdu.getSubrange((12+messageLength +(4-messageLength%4)), nickLength);
+				}else{
 					nickname = pdu.getSubrange((12+messageLength), nickLength);
-				}else if(messageLength %4 == 1){
-					nickname = pdu.getSubrange((12+messageLength+3), nickLength);
 				}
-				else if(messageLength %4 == 2){
-					nickname = pdu.getSubrange((12+messageLength+2), nickLength);
-				}
-				else{
-					nickname = pdu.getSubrange((12+messageLength+1), nickLength);
-				}
+
+				
 				String nick = new String(nickname,"UTF-8");
 				System.out.println(timeString.toString() +" \nMessage from "+nick+":");
 				System.out.println(messageString);

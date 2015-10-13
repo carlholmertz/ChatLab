@@ -42,7 +42,7 @@ public class PDUNicks {
 		ChatMain.sInput.read(nickNamesPDU, 0, nickNamesPDU.length);
 		
 		/*---Bygger upp PDUn från grunden---*/
-		PDU pdu = new PDU(nickNamesPDU.length+1);
+		PDU pdu = new PDU(nickNamesPDU.length + 1);
 		pdu.setByte(0,op);
 		pdu.setSubrange(1, nickNamesPDU);
 		
@@ -58,8 +58,13 @@ public class PDUNicks {
 		String oldName = new String(oldNickName,"UTF-8");
 		
 		byte[] newNickName = new byte[newNickLength];
-		
-		newNickName = pdu.getSubrange(8+oldNickLength,(newNickLength+(4-newNickLength%4)));
+	
+		if(oldNickLength%4 != 0){
+			newNickName = pdu.getSubrange((8+oldNickLength+(4-oldNickLength%4)),(newNickLength));
+		}
+		else{
+			newNickName = pdu.getSubrange((8+oldNickLength),(newNickLength));
+		}
 		String newName = new String(newNickName,"UTF-8");
 		
 		System.out.println(timeString.toString());
@@ -68,7 +73,6 @@ public class PDUNicks {
 	}
 	public static void changeNICK(String newNick) throws UnsupportedEncodingException{
 		
-//		int length = newNick.length();
 		byte[] nickName = newNick.getBytes("UTF-8");
 		/*----Skapar en pdu och fyller den med information----*/
 		PDU pdu = new PDU(4+nickName.length);

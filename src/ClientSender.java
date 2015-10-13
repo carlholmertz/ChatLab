@@ -22,14 +22,18 @@ public class ClientSender implements Runnable{
 				fromKeyboard = keyboardReader.readLine();
 				
 				
+				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				System.out.println("\n Gick inte att läsa från tangentbord!\n");
 				e.printStackTrace();
 			}
+			if(fromKeyboard.length() == 0 ){
+				System.out.println("\nDu kan inte skriva tomma meddelanden! \n");
+			}
 			
 			/*---Kollar om användaren försöker göra en operation---*/
-			if(fromKeyboard.startsWith("/nick")){
+			else if(fromKeyboard.startsWith("/nick")){
 				String nyttNick[] = fromKeyboard.split(" ");
 				if(nyttNick.length != 2){
 					System.out.println("\nDu har angett för många parametrar");

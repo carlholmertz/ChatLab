@@ -98,7 +98,7 @@ public class ConnectToNameserver {
 		for(int i = 0; i != amountOfServers; i++){
 			
 			
-			System.out.println("y: "+y);
+			
 			/*Ip-adressen, castar om long till String, sedan tar vi reda pŒ host namnet
 			 * utifrŒn ip-adressen*/
 			long addressLong = availableServers.getInt(y);
@@ -122,7 +122,7 @@ public class ConnectToNameserver {
 				
 				/*Servernamn hŠmtas som en byte array fšr att kunna skrivas till en strŠng*/
 
-				System.out.println("\n"+"LŠngd: "+ availableServers.length());
+				
 				
 	
 				System.out.println("\n"+"Server nr: "+ (i+1));
@@ -143,13 +143,13 @@ public class ConnectToNameserver {
 				servers[i][0] = hostName;
 				servers[i][1] = Integer.toString(portNumber);
 				
-				if(nameLength > 4){
+				if(nameLength%4 != 0){
 					
 					y += (nameLength + (4-(nameLength%4)));
 				
 				}
 				else{
-					y += 4;
+					y += nameLength;
 				}
 			
 			}else{

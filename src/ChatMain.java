@@ -23,12 +23,14 @@ public class ChatMain{
 		System.out.println("Välj servernummer:");
 		choice = in.nextLine();
 		
+		
 		/*---Om val av server inte är giltigt---*/
 		while(Integer.parseInt(choice) <= 0 || Integer.parseInt(choice) > availableServers.length){
 			System.out.println(choice+" är inte en giltlig server, ange nytt servernummer:");
 			choice = in.nextLine();
 			
 		}
+		
 		
 		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
 		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
@@ -51,8 +53,16 @@ public class ChatMain{
 			e.printStackTrace();
 		}
 		/*---Användaren får ange önskat användarnamn---*/
+		
 		System.out.println("Skriv användarnamn:");
 		String nickName = in.nextLine();
+		
+		/*---Anvöndarnamnet måste bestå av minst ett tecken---*/
+		while(nickName.length() == 0){
+			System.out.println("Ditt användarnamn måste bestå av minst ett tecken!");
+			System.out.println("Skriv användarnamn:");
+			nickName = in.nextLine();
+		}
 		
 		/*-----Försöker ansluta till chatten med joinPDUn-----*/
 		byte [] joinPdu = PDUJoin.createPdu(nickName);
@@ -149,7 +159,10 @@ public class ChatMain{
 			}
 		}
 	}
+	
 }
+
+
 
 
 
