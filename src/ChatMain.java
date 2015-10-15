@@ -31,12 +31,10 @@ public class ChatMain{
 			
 		}
 		
-		
+		// Sparar port och adress som användaren angett
 		int port = Integer.parseInt(availableServers[(Integer.parseInt(choice)-1)][1]);
 		InetAddress address = InetAddress.getByName(availableServers[(Integer.parseInt(choice)-1)][0]);
-//		int port = 65450;
-//		InetAddress address = InetAddress.getByName("while.cs.umu.se");
-		
+
 		
 		try {
 			/*---Öppnar en socket för anslutning till servern---*/

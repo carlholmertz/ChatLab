@@ -38,7 +38,7 @@ public class PDUNicks {
 		
 		/*---Skapar en byte array och läser in allt från input-streamen till den---*/
 		byte[] nickNamesPDU = new byte[ChatMain.sInput.available()];
-		
+		System.out.println("Nick Längd: "+nickNamesPDU.length);
 		ChatMain.sInput.read(nickNamesPDU, 0, nickNamesPDU.length);
 		
 		/*---Bygger upp PDUn från grunden---*/
@@ -51,18 +51,24 @@ public class PDUNicks {
 		
 		/*---En byte med pad nästa offset blir 4---*/
 		long time = pdu.getInt(4);
+		
+		// Tar fram en timestamp
 		Timestamp timeString = new Timestamp(time);
 		
+		// Tar fram det gamla användarnamnet. 
 		byte[] oldNickName = new byte[oldNickLength];
 		oldNickName = pdu.getSubrange(8,oldNickLength);
 		String oldName = new String(oldNickName,"UTF-8");
 		
+		// Tar fram det nya användarnamnet
 		byte[] newNickName = new byte[newNickLength];
 	
 		if(oldNickLength%4 != 0){
+			// Plus 8 för att det är 8 bytes fram i pdu:n som gamla användarnamnet börjar
 			newNickName = pdu.getSubrange((8+oldNickLength+(4-oldNickLength%4)),(newNickLength));
 		}
 		else{
+			// Plus 8 för att det är 8 bytes fram i pdu:n som gamla användarnamnet börjar
 			newNickName = pdu.getSubrange((8+oldNickLength),(newNickLength));
 		}
 		String newName = new String(newNickName,"UTF-8");
