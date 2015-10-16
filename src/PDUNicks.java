@@ -88,9 +88,9 @@ public class PDUNicks {
 		pdu.setByte(3,(byte)0);//Pad
 		
 		
-		System.out.println("hej1");
+		
 		pdu.setSubrange(4,nickName);
-		System.out.println("hej");
+	
 		/*---Kontrollerar att PDUn Šr delbar med 4---*/
 		ChatMain.devideByFour(pdu);
 		
