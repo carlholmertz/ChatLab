@@ -115,15 +115,15 @@ public class ChatMain{
         			PDUNicks.readUCNICK(op);
         			
         		break;
-//            	case OpCodes.QUIT:
-//        			System.out.println("\nChatten avslutas. ");
-//        			
-//        			client.shutdownOutput();
-//        			client.shutdownInput();
-//        			client.close();
-//        			loop = false;
-//        			
-//        		break;
+            	case OpCodes.QUIT:
+        			System.out.println("\nChatten avslutas. ");
+        			
+        			client.shutdownOutput();
+        			client.shutdownInput();
+        			client.close();
+        			loop = false;
+        			
+        		break;
             	default:
             		System.out.println(op+" Felaktig OP-kod");
             		System.out.println(sInput.available());

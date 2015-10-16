@@ -58,11 +58,12 @@ public class ClientSender implements Runnable{
 					ChatMain.sOutput.write(quit);
 					
 					//Avslutar programmet.
-					System.exit(0);
+					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				System.exit(0);
 			}
 			/*---Om personen skriver fel kommando så skrivs det ut vad man kan göra---*/
 			else if(fromKeyboard.startsWith("/")){
